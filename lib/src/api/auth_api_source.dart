@@ -1,10 +1,11 @@
 import 'package:api_fake_store/src/api/api_source.dart';
 import 'package:api_fake_store/src/repository/auth_repository.dart';
+import 'package:api_fake_store/utils/constants.dart';
 
 class AuthApiSource extends ApiSource implements AuthRepository {
   AuthApiSource(super.client);
 
-  final String _baseUrl = 'https://fakestoreapi.com';
+  final String _baseUrl = Constants.baseUrl;
   final String _endpoint = 'auth/login';
 
   @override

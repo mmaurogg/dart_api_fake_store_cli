@@ -1,13 +1,13 @@
 import 'package:api_fake_store/src/api/api_source.dart';
 import 'package:api_fake_store/src/models/product.dart';
 import 'package:api_fake_store/src/repository/product_repository.dart';
+import 'package:api_fake_store/utils/constants.dart';
 
 class ProductApiSource extends ApiSource implements ProductRepository {
   ProductApiSource(super.client);
 
-  final String _baseUrl = 'https://fakestoreapi.com';
+  final String _baseUrl = Constants.baseUrl;
   final String _endpoint = 'products';
-  //final String _endpoint = 'users';
 
   @override
   Future<List<Product?>> getProducts() async {
