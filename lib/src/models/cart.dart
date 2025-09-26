@@ -1,35 +1,25 @@
-import 'package:api_fake_store/src/models/cart_product.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Cart {
-  int? id;
-  int? userId;
-  DateTime? date;
-  List<CartProduct>? products;
+part 'cart.freezed.dart';
+part 'cart.g.dart';
 
-  Cart({this.id, this.userId, this.date, this.products});
+@freezed
+abstract class Cart with _$Cart {
+  const factory Cart({
+    int? id,
+    int? userId,
+    DateTime? date,
+    List<CartProduct>? products,
+  }) = _Cart;
 
-  Cart.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['userId'];
-    if (json['date'] != null) {
-      date = DateTime.parse(json['date']);
-    }
-    if (json['products'] != null) {
-      products = <CartProduct>[];
-      json['products'].forEach((v) {
-        products!.add(CartProduct.fromJson(v));
-      });
-    }
-  }
+  factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
+}
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['userId'] = userId;
-    data['date'] = date?.toIso8601String();
-    if (products != null) {
-      data['products'] = products!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+@freezed
+abstract class CartProduct with _$CartProduct {
+  const factory CartProduct({int? id, int? productId, int? quantity}) =
+      _CartProduct;
+
+  factory CartProduct.fromJson(Map<String, dynamic> json) =>
+      _$CartProductFromJson(json);
 }

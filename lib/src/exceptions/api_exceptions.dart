@@ -1,4 +1,3 @@
-/// Excepción base para todos los errores de la API.
 class ApiException implements Exception {
   final String message;
   ApiException(this.message);
