@@ -1,0 +1,23 @@
+# Archivos de Dart/Flutter
+.dart_tool/
+.packages
+.pub/
+build/
+# Evita los lockfiles generados
+pubspec.lock
+
+# VS Code
+.vscode/
+.history/
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Archivos de logs o temporales
+*.log
+*.tmp
+*.swp
+
+# Archivos de cobertura de pruebas
+coverage/
