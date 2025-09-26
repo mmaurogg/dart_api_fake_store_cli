@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:api_fake_store/src/api/auth_api_source.dart';
 import 'package:api_fake_store/src/api/cart_api_source.dart';
 import 'package:api_fake_store/src/api/product_api_source.dart';
+import 'package:api_fake_store/src/exceptions/api_exceptions.dart';
 import 'package:api_fake_store/src/models/cart.dart';
 import 'package:api_fake_store/utils/loading_indicator.dart';
 import 'package:dio/dio.dart';
@@ -23,8 +24,8 @@ Future<void> login() async {
     if (token != null) {
       stdout.writeln('su token es: $token');
     }
-  } catch (e) {
-    stdout.writeln('Ocurrió un error al obtener su informacion');
+  } on ApiException catch (e) {
+    stdout.writeln('Error al iniciar sesión: $e');
   } finally {
     stopLoading();
   }
@@ -57,8 +58,8 @@ Future<void> productManager() async {
         } else {
           stdout.writeln('No se encontraron productos.');
         }
-      } catch (e) {
-        stdout.writeln('Ocurrió un error al obtener los productos: $e');
+      } on ApiException catch (e) {
+        stdout.writeln('Error al obtener los productos: $e');
       } finally {
         stopLoading();
       }
@@ -79,8 +80,8 @@ Future<void> productManager() async {
           } else {
             stdout.writeln('No se encontró ningún producto con el ID: $id');
           }
-        } catch (e) {
-          stdout.writeln('Ocurrió un error al obtener el producto: $e');
+        } on ApiException catch (e) {
+          stdout.writeln('Error al obtener el producto: $e');
         } finally {
           stopLoading();
         }
@@ -110,8 +111,8 @@ Future<void> cartManager() async {
         'El carro tiene: ${(cart.products ?? []).length} productos',
       );
     }
-  } catch (e) {
-    stdout.writeln('Ocurrió un error al obtener su carrito');
+  } on ApiException catch (e) {
+    stdout.writeln('Error al obtener el carrito: $e');
   } finally {
     stopLoading();
   }

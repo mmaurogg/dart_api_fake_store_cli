@@ -1,3 +1,4 @@
+import 'package:api_fake_store/src/exceptions/api_exceptions.dart';
 import 'package:dio/dio.dart';
 
 class ApiSource {
@@ -11,16 +12,17 @@ class ApiSource {
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
-        print(jsonResponse);
+        //print(jsonResponse);
         return jsonResponse;
       } else {
-        print('Request failed with status: ${response.statusCode}.');
-        throw Exception('Request failed with status: ${response.statusCode}.');
+        //print('Request failed with status: ${response.statusCode}.');
+        throw ServerException(
+          'Request failed with status: ${response?.statusCode} ',
+        );
       }
-    } catch (e) {
-      print('Error: $e');
+    } on DioException catch (e) {
+      _handleDioException(e);
     }
-    return null;
   }
 
   Future<T?> postApi<T>(String url, T data) async {
@@ -29,15 +31,30 @@ class ApiSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonResponse = response.data;
-        print(jsonResponse);
+        //print(jsonResponse);
         return jsonResponse;
       } else {
-        print('Request failed with status: ${response.statusCode}.');
-        throw Exception('Request failed with status: ${response.statusCode}.');
+        //print('Request failed with status: ${response.statusCode}.');
+        throw ServerException(
+          'Request failed with status: ${response?.statusCode} ',
+        );
       }
-    } catch (e) {
-      print('Error: $e');
+    } on DioException catch (e) {
+      _handleDioException(e);
     }
-    return null;
+  }
+
+  Never _handleDioException(DioException e) {
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.connectionError) {
+      throw NetworkException(
+        e.message ??
+            'No se pudo conectar al servidor. Revisa tu conexión a internet.',
+      );
+    }
+
+    throw ServerException(e.message ?? 'No se pudo conectar al servidor.');
   }
 }
