@@ -7,35 +7,42 @@ import 'package:api_fake_store/src/api/product_api_source.dart';
 import 'package:dio/dio.dart';
 
 Future<void> main(List<String> arguments) async {
-  // api_fake_store.main(arguments);
+  if (false) {
+    final username = "mor_2314";
+    final password = "83r5^_";
 
-  final username = "mor_2314";
-  final password = "83r5^_";
+    final client = Dio();
 
-  final client = Dio();
+    final authApiSource = AuthApiSource(client);
+    final product_apiSource = ProductApiSource(client);
+    final cartApiSource = CartApiSource(client);
 
-  final authApiSource = AuthApiSource(client);
-  final product_apiSource = ProductApiSource(client);
-  final cartApiSource = CartApiSource(client);
+    authApiSource.login(username, password).then((value) => print(value));
 
-  //authApiSource.login(username, password);
+    //product_apiSource.getProducts();
 
-  //product_apiSource.getProducts();
+    //product_apiSource.getProduct('1');
 
-  //product_apiSource.getProduct('1');
+    //cartApiSource.getCart('1');
 
-  //cartApiSource.getCart('1');
+    return;
+  }
 
-  stdout.write('-------------------------------');
-  stdout.writeln('Bienvenido a la tienda Fake Store!');
+  run();
+}
+
+void run() {
+  stdout.writeln('-------------------------------');
+  stdout.writeln('Esta es la tienda Fake Store!');
   stdout.writeln('¿Qué te gustaría hacer?');
   stdout.writeln('1. Login');
   stdout.writeln('2. Ver los productos');
   stdout.writeln('3. Ver su carrito');
-  stdout.write('-------------------------------');
-  stdout.writeln('\n');
+  stdout.writeln('4. Salir');
+  stdout.writeln('-------------------------------');
 
   final option = stdin.readLineSync();
+  //final option = "3";
 
   switch (option) {
     case '1':
@@ -46,6 +53,8 @@ Future<void> main(List<String> arguments) async {
       break;
     case '3':
       api_fake_store.cartManager();
+      break;
+    case '4':
       break;
     default:
   }

@@ -5,7 +5,7 @@ import 'package:api_fake_store/src/api/auth_api_source.dart';
 import 'package:api_fake_store/src/api/cart_api_source.dart';
 import 'package:api_fake_store/src/api/product_api_source.dart';
 import 'package:api_fake_store/src/exceptions/api_exceptions.dart';
-import 'package:api_fake_store/src/models/cart.dart';
+
 import 'package:api_fake_store/utils/loading_indicator.dart';
 import 'package:dio/dio.dart';
 
@@ -15,20 +15,23 @@ Future<void> login() async {
   final apiSource = AuthApiSource(client);
 
   final stopLoading = showLoadingAnimation(text: 'Ingresando a tu cuenta');
-  try {
-    final username = "mor_2314";
-    final password = "83r5^_";
 
-    String? token = await apiSource.login(username, password);
+  final username = "mor_2314";
+  final password = "83r5^_";
 
-    if (token != null) {
-      stdout.writeln('su token es: $token');
-    }
-  } on ApiException catch (e) {
-    stdout.writeln('Error al iniciar sesión: $e');
-  } finally {
-    stopLoading();
-  }
+  final response = await apiSource.login(username, password);
+
+  stopLoading();
+
+  response.fold(
+    (failure) {
+      stdout.writeln('Error al iniciar sesión: $failure');
+    },
+    (token) {
+      stdout.writeln('Login exitoso!');
+      stdout.writeln('Tu token es: $token');
+    },
+  );
 }
 
 Future<void> productManager() async {
@@ -44,10 +47,22 @@ Future<void> productManager() async {
   switch (option) {
     case '1':
       final stopLoading = showLoadingAnimation(text: 'Obteniendo productos');
-      try {
-        final products = await apiSource.getProducts();
-        if (products.isNotEmpty) {
+
+      final response = await apiSource.getProducts();
+
+      stopLoading();
+
+      response.fold(
+        (failure) {
+          stdout.writeln('Error al obtener los productos: $failure');
+        },
+        (products) {
           stdout.writeln('--- Lista de Productos ---');
+
+          if (products.isEmpty) {
+            return stdout.writeln('No se encontraron productos.');
+          }
+
           for (var product in products) {
             if (product != null) {
               stdout.writeln(
@@ -55,36 +70,35 @@ Future<void> productManager() async {
               );
             }
           }
-        } else {
-          stdout.writeln('No se encontraron productos.');
-        }
-      } on ApiException catch (e) {
-        stdout.writeln('Error al obtener los productos: $e');
-      } finally {
-        stopLoading();
-      }
+        },
+      );
+
       break;
     case '2':
       stdout.write('Ingresa el ID del producto: ');
       final id = stdin.readLineSync();
       if (id != null && id.isNotEmpty) {
         final stopLoading = showLoadingAnimation(text: 'Buscando producto $id');
-        try {
-          final product = await apiSource.getProduct(id);
-          if (product != null) {
+
+        final response = await apiSource.getProduct(id);
+
+        stopLoading();
+
+        response.fold(
+          (failure) {
+            stdout.writeln('Error al obtener el producto: $failure');
+          },
+          (product) {
+            if (product == null) {
+              return stdout.writeln('el producto no tiene información.');
+            }
             stdout.writeln('--- Detalles del Producto ---');
             stdout.writeln('ID: ${product.id}');
             stdout.writeln('Título: ${product.title}');
             stdout.writeln('Precio: \$${product.price}');
             stdout.writeln('Descripción: ${product.description}');
-          } else {
-            stdout.writeln('No se encontró ningún producto con el ID: $id');
-          }
-        } on ApiException catch (e) {
-          stdout.writeln('Error al obtener el producto: $e');
-        } finally {
-          stopLoading();
-        }
+          },
+        );
       } else {
         stdout.writeln('ID inválido.');
       }
@@ -100,20 +114,26 @@ Future<void> cartManager() async {
   final apiSource = CartApiSource(client);
 
   final stopLoading = showLoadingAnimation(text: 'Obteniendo el carrito');
-  try {
-    Cart? cart = await apiSource.getCart('1');
 
-    if (cart != null) {
-      stdout.writeln('--- Detalles del Producto ---');
-      stdout.writeln('ID: ${cart.id}');
-      stdout.writeln('El ID del usuario es: ${cart.userId}');
-      stdout.writeln(
-        'El carro tiene: ${(cart.products ?? []).length} productos',
-      );
-    }
-  } on ApiException catch (e) {
-    stdout.writeln('Error al obtener el carrito: $e');
-  } finally {
-    stopLoading();
-  }
+  final result = await apiSource.getCart('1');
+
+  stopLoading();
+
+  result?.fold(
+    (failure) {
+      stdout.writeln('Error al obtener el carrito: $failure');
+    },
+    (cart) {
+      if (cart != null) {
+        stdout.writeln('--- Detalles del Producto ---');
+        stdout.writeln('ID: ${cart.id}');
+        stdout.writeln('El ID del usuario es: ${cart.userId}');
+        stdout.writeln(
+          'El carro tiene: ${(cart.products ?? []).length} productos',
+        );
+      } else {
+        stdout.writeln('No se encontró ningún carrito.');
+      }
+    },
+  );
 }
