@@ -10,7 +10,7 @@ Asegúrate de tener el SDK de Dart instalado en tu sistema.
 
 1.  **Clona el repositorio:**
     ```sh
-    git clone <URL_DEL_REPOSITORIO>
+    git clone https://github.com/mmaurogg/dart_api_fake_store_cli.git
     cd api_fake_store
     ```
 
