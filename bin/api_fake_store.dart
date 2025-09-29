@@ -31,14 +31,20 @@ Future<void> main(List<String> arguments) async {
   run();
 }
 
-void run() {
+Future<void> run() async {
   stdout.writeln('-------------------------------');
   stdout.writeln('Esta es la tienda Fake Store!');
+  stdout.writeln('ingrese cualquier tecla y de enter para continuar');
+  stdin.readLineSync();
+
+  stdout.writeln('-------------------------------');
+  await api_fake_store.login();
+
+  stdout.writeln('-------------------------------');
   stdout.writeln('¿Qué te gustaría hacer?');
-  stdout.writeln('1. Login');
-  stdout.writeln('2. Ver los productos');
-  stdout.writeln('3. Ver su carrito');
-  stdout.writeln('4. Salir');
+  stdout.writeln('1. Ver los productos');
+  stdout.writeln('2. Ver su carrito');
+  stdout.writeln('3. Salir');
   stdout.writeln('-------------------------------');
 
   final option = stdin.readLineSync();
@@ -46,15 +52,12 @@ void run() {
 
   switch (option) {
     case '1':
-      api_fake_store.login();
-      break;
-    case '2':
       api_fake_store.productManager();
       break;
-    case '3':
+    case '2':
       api_fake_store.cartManager();
       break;
-    case '4':
+    case '3':
       break;
     default:
   }
