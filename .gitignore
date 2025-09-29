@@ -3,6 +3,7 @@
 .packages
 .pub/
 build/
+pubspec.lock 
 
 # Archivos generados por build_runner (freezed, json_serializable, etc.)
 # Es una buena práctica no versionar estos archivos, ya que se pueden
