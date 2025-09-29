@@ -3,6 +3,7 @@ import 'dart:io';
 
 /// Muestra una animación de carga en la consola.
 /// Devuelve una función que, al ser llamada, detiene la animación.
+
 Function showLoadingAnimation({String text = 'Cargando'}) {
   final frames = ['|', '/', '-', r'\'];
   int frameIndex = 0;

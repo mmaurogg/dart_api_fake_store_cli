@@ -3,8 +3,12 @@
 .packages
 .pub/
 build/
-# Evita los lockfiles generados
-pubspec.lock
+
+# Archivos generados por build_runner (freezed, json_serializable, etc.)
+# Es una buena práctica no versionar estos archivos, ya que se pueden
+# regenerar en cualquier momento con `dart run build_runner build`.
+*.freezed.dart
+*.g.dart
 
 # VS Code
 .vscode/
